@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import folium
+import datetime
 from streamlit_folium import st_folium
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
@@ -93,7 +94,14 @@ with tab1:
             with col1:
                 asal = st.selectbox("Kota Asal", sorted(KOTA_KOORDINAT.keys()))
                 tujuan = st.selectbox("Kota Tujuan", sorted(KOTA_KOORDINAT.keys()))
-                waktu_berangkat = st.slider("Waktu Berangkat (jam)", 4.0, 10.0, 6.5, step=0.1)
+                waktu_berangkat_time = st.time_input("Waktu Berangkat", value=datetime.time(6, 30))
+                waktu_berangkat = waktu_berangkat_time.hour + waktu_berangkat_time.minute / 60
+                
+                if not (5 <= waktu_berangkat_time.hour <= 21):
+                    st.warning("⚠️ Waktu berangkat hanya diperbolehkan antara jam 05:00 sampai 21:00.")
+                    st.stop()
+
+
             with col2:
                 cuaca = st.selectbox("Kondisi Cuaca", ["Cerah", "Hujan", "Berawan"])
                 kendaraan = st.selectbox("Jenis Kendaraan", ["Truk", "Pickup", "Van", "Motor Box"])
@@ -218,7 +226,16 @@ with tab3:
             with col1:
                 asal = st.selectbox("Kota Asal", sorted(KOTA_KOORDINAT.keys()))
                 tujuan = st.selectbox("Kota Tujuan", sorted(KOTA_KOORDINAT.keys()))
-                waktu_berangkat = st.slider("Waktu Berangkat", 4.0, 10.0, 6.5, step=0.1)
+                waktu_berangkat_time = st.time_input("Waktu Berangkat", value=datetime.time(6, 30))
+                waktu_berangkat = waktu_berangkat_time.hour + waktu_berangkat_time.minute / 60
+                
+                if not (5 <= waktu_berangkat_time.hour <= 21):
+                    st.warning("⚠️ Waktu berangkat hanya diperbolehkan antara jam 05:00 sampai 21:00.")
+                    st.stop()
+    
+    # lanjutkan proses penyimpanan data
+
+                    
             with col2:
                 cuaca = st.selectbox("Prakiraan Cuaca", le_cuaca.classes_)
                 kendaraan = st.selectbox("Jenis Kendaraan", le_kendaraan.classes_)
@@ -278,4 +295,4 @@ with tab3:
         st.warning("⚠️ Masukkan minimal 10 data pengiriman untuk mengaktifkan fitur prediksi")
 
 st.markdown("---")
-st.caption("Sistem Prediksi Keterlambatan Pengiriman Ekspedisi - © 2023")
+st.caption("Sistem Prediksi Keterlambatan Pengiriman Ekspedisi - © 2025")
